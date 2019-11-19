@@ -15,6 +15,8 @@ library(corrplot)
 library(ggplot2)
 library(tidyverse)
 library(hrbrthemes)
+library(lattice)
+library(caret)
 ```
 
 Start off by loading the data and visualize the data
