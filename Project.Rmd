@@ -22,6 +22,11 @@ library(caret)
 Start off by loading the data and visualize the data
 ```{r cars}
 credit=read.csv("C:/Users/Rachael/Desktop/Statistical Machine Learning/Project/creditcard.csv")
+
+
+ggplot()+## what is alpha do exactly
+geom_density(data=creditcard.true,aes(x=Time),color="blue",fill="blue",alpha=0.12) +
+geom_density(data=creditcard.false,aes(x=Time),color="red",fill="red",alpha=0.12)
 head(credit)
 creditnew=credit
 creditnew$Class[creditnew$Class==0]="Non_Fraudulent"
