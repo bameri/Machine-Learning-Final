@@ -1,0 +1,133 @@
+---
+title: "FINAL PROJECT"
+author: "Rachael"
+date: "16/11/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(car) 
+library(knitr)
+library(GGally)
+library(dplyr)
+library(corrplot)
+library(ggplot2)
+library(tidyverse)
+library(hrbrthemes)
+```
+
+Start off by loading the data and visualize the data
+```{r cars}
+credit=read.csv("C:/Users/Rachael/Desktop/Statistical Machine Learning/Project/creditcard.csv")
+head(credit)
+creditnew=credit
+creditnew$Class[creditnew$Class==0]="Non_Fraudulent"
+creditnew$Class[creditnew$Class==1]="Fraudulent"
+creditnew=creditnew[,1:31]
+head(creditnew)
+creditnew=data.frame(creditnew)
+M=cor(credit)
+corrplot(M,method="color")
+
+# Histogram of Time
+data=data.frame(creditnew)
+p=ggplot(data, aes(x=Time)) + 
+  geom_histogram(binwidth=1000,color="blue",fill="white",alpha=0.9)+
+  geom_density(alpha=0.2,fill="#FF6655") +
+  ggtitle("Time with bin size=1000")
+p
+
+#Histogram of Amount
+q=ggplot(data, aes(x=Amount)) + 
+  geom_histogram(binwidth=100,color="blue",fill="red",alpha=0.9)+
+  geom_density(aes(x=Amount), alpha=0.2,fill="#FF6655") +
+  ggtitle("Amount with bin size=100")
+q
+
+ggplot(data, aes(x=as.factor(Class), fill=as.factor(Class) )) +  
+  geom_bar( ) +
+  scale_fill_manual(values = c("red", "blue") )
+
+#Percentage of Non_Fraudulent classes
+(1-(sum(credit$Class==1)/length(credit$Class)))*100
+
+#Percentage of fraudulent Classes
+(sum(credit$Class==1)/length(credit$Class))*100
+
+
+ggplot(data = creditnew, aes(y = creditnew$Amount, x = creditnew$Class, col = creditnew$Class)) +
+geom_point() + geom_jitter() + theme_light()
+
+```
+
+Now performing undersampling
+```{r}
+nsample=sum(creditnew$Class=="Fraudulent")
+#Trying to make our seed as random as possible we can use system time, convert it into an integer the computer clock
+initial_seed=Sys.time()
+#convert time into a numeric variable
+initial.seed=as.integer(initial_seed)
+print(initial.seed)
+#we can take the last five digits of the initial seed
+seed=initial.seed%% 100000
+print(seed)
+set.seed(seed)
+
+#Let's try to ignore the imbalancing problem for logistic regression and KNN with say 80% going to the training set
+
+logist=rep(NA,nrow(creditnew))
+knneigh=rep(NA,nrow(creditnew))
+creditminustime=credit[,-1]
+n=nrow(creditnew)
+for(i in 1:n)
+{
+  #remove subject to validate
+  n.train=floor(0.8*n)
+  train=sample(1:n, size= n.test, rep=F)
+  credit.train= creditminustime[train, ]
+
+  #select features in the validation set
+  credit.test= creditnew[-train, ]
+  
+  #logistic regression fit
+  log.fit=glm(creditnew$Class ~ .,data=creditminustime, family = binomial)
+  
+  yhat.test=predict(log.fit,newdata=credit.test, type = "response")
+  predictions_logist=ifelse(yhat.test < 0.5, "t", "f")
+  logist[n.test]= predictions_logist
+  
+}
+
+
+
+
+
+
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+The references include
+```{r pressure, echo=FALSE}
+# 1.On the Classification of Imbalanced Datasets 1C.V. KrishnaVeni, 2T. Sobha Rani 1,2Dept. of Computers and Information Sciences University of Hyderabad, India...IJCST Vol. 2, SP 1, December 2011...ISSN : 0976-8491(Online) | ISSN : 2229-4333(Print)
+
+# 2.
+
+
+```
